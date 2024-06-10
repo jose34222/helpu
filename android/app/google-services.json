@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "721582080212",
+    "project_id": "helpu-login",
+    "storage_bucket": "helpu-login.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:721582080212:android:10c924b5089463497dfb41",
+        "android_client_info": {
+          "package_name": "com.helpu.helpu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "721582080212-sapdma4umnlpohsli4o9e4i007a84c21.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.helpu.helpu",
+            "certificate_hash": "8c0952c1c5a1406d07dc156ab32f6e1b380cde09"
+          }
+        },
+        {
+          "client_id": "721582080212-jjdmkrumiost4vkafb1oqspv5u8erae6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzVBQaM_CLgvd-99VrwwLoTS0UrjyMNKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "721582080212-jjdmkrumiost4vkafb1oqspv5u8erae6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "721582080212-md61q0tojc2jhrm40tfcrd46b8g3tau5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.helpu.helpu"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
