@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:helpu/src/constants/colors.dart';
 import 'package:helpu/src/features/core/models/dashboard/categories_model.dart';
+
 class DashboardCategory extends StatelessWidget {
   const DashboardCategory({
     Key? key,
@@ -43,11 +43,11 @@ class DashboardCategory extends StatelessWidget {
                     child: Center(
                       child: Text(
                         list[index].title,
-                        style: textTheme.headlineSmall?.apply(color: Colors.white),
+                        style: textTheme.headlineSmall?.apply(color: Colors.black38),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 5),
+                  const SizedBox(width: 4),
                   Flexible(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,12 +55,12 @@ class DashboardCategory extends StatelessWidget {
                       children: [
                         Text(
                           list[index].heading,
-                          style: textTheme.headlineSmall,
+                          style: textTheme.headlineMedium,
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
                           list[index].subHeading,
-                          style: textTheme.bodyMedium,
+                          style: textTheme.bodySmall,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],

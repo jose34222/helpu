@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:helpu/src/features/authetication/model/student_model.dart';
+import 'package:helpu/src/features/core/screens/dashboard/widgets/detalle_student.dart';
+import 'package:helpu/src/features/postulacion/controller/postulacion_controller.dart';
+import 'package:helpu/src/features/postulacion/model/postulacion_model.dart';
+import 'package:helpu/src/features/practica/controller/practica_controller.dart';
 import 'package:helpu/src/features/practica/model/practica_model.dart';
+import 'package:helpu/src/features/student/controller/student_controller.dart';
 
 
 class PracticeDetailScreen extends StatelessWidget {
   final PracticaModel practice;
 
-  const PracticeDetailScreen({Key? key, required this.practice})
-      : super(key: key);
+  const PracticeDetailScreen({Key? key, required this.practice}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final PracticaController controller = Get.put(PracticaController());
+    final PostulacionController postulacionController = Get.put(PostulacionController());
+    final StudentController studentController = Get.put(StudentController());
+
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "DETALLE PRACTICA",
           style: TextStyle(
             color: Colors.white,
@@ -26,7 +36,7 @@ class PracticeDetailScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -44,10 +54,10 @@ class PracticeDetailScreen extends StatelessWidget {
           SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: 120),
+                const SizedBox(height: 120),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20.0),
-                  padding: EdgeInsets.all(20.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.all(20.0),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20.0),
@@ -56,7 +66,7 @@ class PracticeDetailScreen extends StatelessWidget {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 2,
                         blurRadius: 5,
-                        offset: Offset(0, 3),
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
@@ -70,58 +80,58 @@ class PracticeDetailScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 20),
-                      Divider(color: Colors.grey),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
+                      const Divider(color: Colors.grey),
+                      const SizedBox(height: 20),
                       _buildInfoItem(
                         'Encabezado:',
                         practice.encabezado,
                         textTheme.bodyMedium!,
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       _buildInfoItem(
                         'Descripción:',
                         practice.descripcion,
                         textTheme.bodyMedium!,
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       _buildInfoItem(
                         'Requisitos:',
                         practice.requisitos,
                         textTheme.bodyMedium!,
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       _buildInfoItem(
                         'Área:',
                         practice.area,
                         textTheme.bodyMedium!,
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       _buildInfoItem(
                         'Fecha de inicio:',
-                        practice.fechaInicio.toString(),
+                        practice.fechaInicio.toDate().toString(),
                         textTheme.bodyMedium!,
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       _buildInfoItem(
                         'Fecha de fin:',
-                        practice.fechaFin.toString(),
+                        practice.fechaFin.toDate().toString(),
                         textTheme.bodyMedium!,
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       _buildInfoItem(
                         'Estado:',
                         practice.estado ? "Activo" : "Inactivo",
                         textTheme.bodyMedium!,
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       Center(
                         child: ElevatedButton(
                           onPressed: () {
-                            // Lógica de postulación aquí
+                            controller.togglePracticaEstado(practice.id.toString());
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 40,
                               vertical: 15,
                             ),
@@ -135,13 +145,13 @@ class PracticeDetailScreen extends StatelessWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.arrow_forward,
                                 color: Colors.white,
                               ),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               Text(
-                                'POSTULAR',
+                                'Cambiar estado',
                                 style: textTheme.bodyMedium?.copyWith(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -152,7 +162,68 @@ class PracticeDetailScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
+                      FutureBuilder<List<PostulacionModel>>(
+                        future: postulacionController.getPostulacionesByPractica(practice.id),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(child: Text('Error: ${snapshot.error}'));
+                          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                            return const Center(child: Text('No hay postulantes.'));
+                          }
+
+                          final postulaciones = snapshot.data!;
+
+                          return FutureBuilder<Map<String, StudentModel>>(
+                            future: _fetchAllStudents(postulaciones, studentController),
+                            builder: (context, studentSnapshot) {
+                              if (studentSnapshot.connectionState == ConnectionState.waiting) {
+                                return const Center(child: CircularProgressIndicator());
+                              } else if (studentSnapshot.hasError) {
+                                return Center(child: Text('Error: ${studentSnapshot.error}'));
+                              } else if (!studentSnapshot.hasData) {
+                                return const Center(child: Text('Error al cargar estudiantes.'));
+                              }
+
+                              final students = studentSnapshot.data!;
+
+                              return DataTable(
+                                columns: const [
+                                  DataColumn(label: Text('Nombre')),
+                                  DataColumn(label: Text('Email')),
+                                  DataColumn(label: Text('Revisado')),
+                                  DataColumn(label: Text('Aprobado')),
+                                  DataColumn(label: Text('Acciones')),
+                                ],
+                                rows: postulaciones.map((postulacion) {
+                                  final student = students[postulacion.emailStudent];
+
+                                  return DataRow(cells: [
+                                    DataCell(Text(student?.fullName ?? 'No encontrado', style: const TextStyle(color: Colors.black))),
+                                    DataCell(Text(postulacion.emailStudent, style: const TextStyle(color: Colors.black))),
+                                    DataCell(Text(postulacion.isRevisado ? 'Si' : 'No', style: const TextStyle(color: Colors.black))),
+                                    DataCell(Text(postulacion.aceptado ? 'Si' : 'No', style: const TextStyle(color: Colors.black))),
+                                    DataCell(
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          if (student != null) {
+                                            Get.to(StudentDetailScreen(student: student, practica: practice,));
+                                          } else {
+                                            Get.snackbar('Error', 'No se pudo encontrar los detalles del estudiante');
+                                          }
+                                        },
+                                        child: const Text('Ver Detalle'),
+                                      ),
+                                    ),
+                                  ]);
+                                }).toList(),
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -164,19 +235,30 @@ class PracticeDetailScreen extends StatelessWidget {
     );
   }
 
+  Future<Map<String, StudentModel>> _fetchAllStudents(List<PostulacionModel> postulaciones, StudentController studentController) async {
+    final Map<String, StudentModel> students = {};
+    for (final postulacion in postulaciones) {
+      final student = await studentController.getStudentDetails(postulacion.emailStudent);
+      if (student != null) {
+        students[postulacion.emailStudent] = student;
+      }
+    }
+    return students;
+  }
+
   Widget _buildInfoItem(String label, String value, TextStyle style) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
             color: Colors.black,
           ),
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Text(
           value,
           style: style.copyWith(

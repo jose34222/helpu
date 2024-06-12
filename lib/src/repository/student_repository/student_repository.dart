@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:helpu/src/features/authetication/model/student_model.dart';
-import 'package:helpu/src/features/authetication/model/user_model.dart';
 
 class StudentRepository extends GetxController {
   static StudentRepository get instance => Get.find();
@@ -29,10 +28,10 @@ class StudentRepository extends GetxController {
     });
   }
 
-  Future<StudentModel> getStudentDetails(String userId) async {
+  Future<StudentModel> getStudentDetails(String email) async {
     final snapshot = await _db
         .collection('Students')
-        .where('UserId', isEqualTo: userId)
+        .where('email', isEqualTo: email)
         .get()
         .catchError((error, stackTrace) {
       Get.snackbar('Error', error.toString(),

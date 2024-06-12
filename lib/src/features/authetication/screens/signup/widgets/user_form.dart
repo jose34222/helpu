@@ -65,7 +65,7 @@ class UserRegistrationForm extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
-                signUpController.registerUser();
+                signUpController.registerStudent();
               }
             },
             child: const Text('Registrar'),

@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:helpu/src/features/core/screens/dashboard/dashboard.dart';
+import 'package:helpu/src/features/core/screens/dashboard/dashboard_student.dart';
 import 'package:helpu/src/repository/authentication_repository/authentication_repository.dart';
 
 class OTPController extends GetxController {
@@ -12,6 +12,6 @@ class OTPController extends GetxController {
   void verifyOtp(String otp) async {
     bool isVerified = await AuthenticationRepository.instance.verifyOtp(otp);
 
-    isVerified ? Get.offAll(() => const Dashboard()) : Get.back();
+    isVerified ? Get.offAll(() => const DashboardStudent()) : Get.back();
   }
 }

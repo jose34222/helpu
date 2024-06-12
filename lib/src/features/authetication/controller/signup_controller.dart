@@ -1,13 +1,12 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:helpu/src/features/authetication/model/student_model.dart';
-import 'package:helpu/src/features/authetication/model/user_model.dart';
 import 'package:helpu/src/repository/authentication_repository/authentication_repository.dart';
 import 'package:helpu/src/repository/empresa_repository/empresa_repository.dart';
 import 'package:helpu/src/repository/student_repository/student_repository.dart';
-import 'package:helpu/src/repository/user_repository/user_repository.dart';
 import 'package:helpu/src/features/authetication/model/empresa_model.dart';
 
 class SignUpController extends GetxController {
@@ -24,25 +23,23 @@ class SignUpController extends GetxController {
   final generoController = TextEditingController();
   final ciudadController = TextEditingController();
 
-  void registerUser() {
-    UserModel user = UserModel(
-      fullName: nameController.text,
-      email: emailController.text,
-      phoneNo: phoneController.text,
-      password: passwordController.text,
+  void registerStudent() {
+
+    StudentModel studentModel = StudentModel(
+        fullName: nameController.text,
+        email: emailController.text,
+        phoneNo: phoneController.text,
+        password: passwordController.text,
+        carrera: carreraController.text,
+        provincia: provinciaController.text,
+        genero: generoController.text,
+        ciudad: ciudadController.text,
+        created_at: Timestamp.now()
     );
-    UserRepository.instance.createUser(user).then((_) {
 
-      StudentModel studentModel = StudentModel(
-          carrera: carreraController.text,
-          provincia: provinciaController.text,
-          genero: generoController.text,
-          ciudad: ciudadController.text,
-          userId: user.email
-      );
-      StudentRepository.instance.createStudents(studentModel);
-      AuthenticationRepository.instance.createUserWithEmailAndPassword(user.email, user.password, true);
+    StudentRepository.instance.createStudents(studentModel).then((_){
 
+      AuthenticationRepository.instance.createUserWithEmailAndPassword(studentModel.email, studentModel.password);
       Get.back();
     }).catchError((error) {
       Get.showSnackbar(GetSnackBar(
@@ -52,23 +49,20 @@ class SignUpController extends GetxController {
   }
 
   void registerEmpresa() {
-    UserModel user = UserModel(
-      fullName: nameController.text,
-      email: emailController.text,
-      phoneNo: phoneController.text,
-      password: passwordController.text,
-    );
-    UserRepository.instance.createUser(user).then((_) {
 
-      EmpresaModel empresaModel = EmpresaModel(
-          fullName: companyNameController.text,
-          phoneNo: phoneController.text,
-          ruc: rucController.text,
-          direccion: direccionController.text,
-          userId: user.email
-      );
-      EmpresaRepository.instance.createEmpresa(empresaModel);
-      AuthenticationRepository.instance.createUserWithEmailAndPassword(user.email, user.password, false);
+    EmpresaModel empresaModel = EmpresaModel(
+        companyName: companyNameController.text,
+        email: emailController.text,
+        password: passwordController.text,
+        phoneNo: phoneController.text,
+        ruc: rucController.text,
+        direccion: direccionController.text,
+        createdAt: Timestamp.now()
+    );
+
+    EmpresaRepository.instance.createEmpresa(empresaModel).then((_){
+      AuthenticationRepository.instance.createUserWithEmailAndPassword(empresaModel.email, empresaModel.password);
+
       Get.back();
     }).catchError((error) {
       Get.showSnackbar(GetSnackBar(

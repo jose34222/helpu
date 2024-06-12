@@ -2,28 +2,39 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StudentModel {
   final String? id;
+  final String fullName;
+  final String email;
+  final String phoneNo;
+  final String password;
   final String carrera;
   final String provincia;
   final String genero;
   final String ciudad;
-  final String userId;
+  final Timestamp created_at;
 
   const StudentModel({
     this.id,
+    required this.fullName,
+    required this.email,
+    required this.phoneNo,
+    required this.password,
     required this.carrera,
     required this.provincia,
     required this.genero,
     required this.ciudad,
-    required this.userId
+    required this.created_at
   });
 
   toJson() {
     return {
-      'Carrera': carrera,
-      'Provincia': provincia,
-      'Genero': genero,
-      'Ciudad': ciudad,
-      'UserId': userId
+      'full_name': fullName,
+      'email': email,
+      'phone_no': phoneNo,
+      'carrera': carrera,
+      'provincia': provincia,
+      'genero': genero,
+      'ciudad': ciudad,
+      'created_at': created_at
     };
   }
 
@@ -32,10 +43,15 @@ class StudentModel {
     final data = document.data()!;
     return StudentModel(
       id: document.id,
-      carrera: data['Carrera'],
-      provincia: data['Provincia'],
-      ciudad: data['Ciudad'],
-      userId: data['UserId'], genero: '',
+      fullName: data['full_name'],
+      email: data['email'],
+      phoneNo: data['phone_no'],
+      password: data['password'],
+      carrera: data['carrera'],
+      provincia: data['provincia'],
+      ciudad: data['ciudad'],
+      genero: data['genero'],
+      created_at: data['created_at']
     );
   }
 }

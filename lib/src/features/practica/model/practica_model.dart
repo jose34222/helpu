@@ -7,9 +7,11 @@ class PracticaModel {
   final String descripcion;
   final String requisitos;
   final String area;
-  final String fechaInicio;
-  final String fechaFin;
+  final Timestamp fechaInicio;
+  final Timestamp fechaFin;
   final bool estado;
+  final String empresaEmail;
+  final Timestamp createdAt;
 
   const PracticaModel({
     this.id,
@@ -21,6 +23,8 @@ class PracticaModel {
     required this.fechaInicio,
     required this.fechaFin,
     required this.estado,
+    required this.empresaEmail,
+    required this.createdAt
   });
 
   Map<String, dynamic> toJson() {
@@ -33,6 +37,8 @@ class PracticaModel {
       'fecha_inicio': fechaInicio,
       'fecha_fin': fechaFin,
       'estado': estado,
+      'empresa_email': empresaEmail,
+      'created_at': createdAt
     };
   }
 
@@ -49,6 +55,8 @@ class PracticaModel {
       fechaInicio: data['fecha_inicio'],
       fechaFin: data['fecha_fin'],
       estado: data['estado'],
+      empresaEmail: data['empresa_email'],
+      createdAt: data['created_at']
     );
   }
 }

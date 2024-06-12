@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:helpu/src/constants/colors.dart';
 import 'package:helpu/src/constants/image_strings.dart';
 import 'package:helpu/src/constants/sizes.dart';
-import 'package:helpu/src/features/core/models/dashboard/latest_model.dart';
+import 'package:helpu/src/features/core/screens/dashboard/widgets/detalle_practica.dart';
 import 'package:helpu/src/features/practica/controller/practica_controller.dart';
 import 'package:helpu/src/features/practica/model/practica_model.dart';
-import 'package:helpu/src/features/core/screens/dashboard/widgets/detalle_practica.dart';
 import 'package:get/get.dart';
 
 
-class DashboardLatest extends StatelessWidget {
-  const DashboardLatest({
+class DashboardLatestEmpresa extends StatelessWidget {
+  const DashboardLatestEmpresa({
     Key? key,
     required this.textTheme,
     required this.searchQuery, // Añadido el parámetro searchQuery
@@ -25,7 +24,7 @@ class DashboardLatest extends StatelessWidget {
     final controller = Get.put(PracticaController());
 
     return FutureBuilder<List<PracticaModel>>(
-      future: controller.getPracticas(),
+      future: controller.getPracticasbyEmail(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
@@ -68,7 +67,7 @@ class DashboardLatest extends StatelessWidget {
                               Flexible(
                                 child: Text(
                                   listPracticas[index].titulo,
-                                  style: textTheme.headlineMedium,
+                                  style: textTheme.headlineMedium?.copyWith(color: Colors.black),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -101,7 +100,7 @@ class DashboardLatest extends StatelessWidget {
                                   ),
                                   Text(
                                     listPracticas[index].descripcion,
-                                    style: textTheme.bodyMedium,
+                                    style: textTheme.headlineMedium?.copyWith(color: Colors.black),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ],

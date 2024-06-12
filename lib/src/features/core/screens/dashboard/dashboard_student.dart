@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:helpu/src/constants/sizes.dart';
 import 'package:helpu/src/constants/text_strings.dart';
-import 'package:helpu/src/features/core/screens/dashboard/widgets/add_practice_screen.dart';
 import 'package:helpu/src/features/core/screens/dashboard/widgets/appbard.dart';
 import 'package:helpu/src/features/core/screens/dashboard/widgets/banner.dart';
 import 'package:helpu/src/features/core/screens/dashboard/widgets/category.dart';
-import 'package:helpu/src/features/core/screens/dashboard/widgets/latest_addition.dart';
+import 'package:helpu/src/features/core/screens/dashboard/widgets/latest_addition_student.dart';
 import 'package:helpu/src/features/core/screens/dashboard/widgets/search.dart';
+import 'package:helpu/src/features/core/screens/postulacion_screen.dart';
 import '../../models/dashboard/latest_model.dart';
 
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+class DashboardStudent extends StatefulWidget {
+  const DashboardStudent({Key? key}) : super(key: key);
 
   @override
-  _DashboardState createState() => _DashboardState();
+  _DashboardStudentState createState() => _DashboardStudentState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardStudentState extends State<DashboardStudent> {
   String selectedCategory = 'IT'; // Categoría por defecto
   String searchQuery = ''; // Query de búsqueda
   List<DashboardLatestModel> filteredList = [];
@@ -54,17 +54,11 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
-  void _addPractice(BuildContext context) async {
-    final result = await Navigator.push(
+  void _viewPostulaciones(BuildContext context) {
+    Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => AddPracticeScreen()),
+      MaterialPageRoute(builder: (context) => PostulacionesScreen()),
     );
-    if (result != null && result is DashboardLatestModel) {
-      setState(() {
-        DashboardLatestModel.addPractice(result);
-        _filterList(); // Actualiza la lista filtrada
-      });
-    }
   }
 
   @override
@@ -101,20 +95,19 @@ class _DashboardState extends State<Dashboard> {
               const SizedBox(height: tDashboardPadding),
               DashboardBanner(textTheme: textTheme),
 
-              /* -- Add Practice Button -- */
-              const SizedBox(height: tDashboardPadding),
+              /* -- Verificar practica -- */
               ElevatedButton(
-                onPressed: () => _addPractice(context),
-                child: const Text('Añadir Práctica'),
+                onPressed: () => _viewPostulaciones(context),
+                child: const Text('Ver Postulaciones'),
               ),
 
               /* -- Dashboard Latest Addition -- */
               const SizedBox(height: tDashboardPadding),
               Text(
-                'Prácticas añadidas',
+                'Postulaciones realizadas',
                 style: textTheme.headlineSmall,
               ),
-              DashboardLatest(
+              DashboardLatestStudent(
                 textTheme: textTheme,
                 searchQuery: searchQuery, // Añadido para pasar la búsqueda
               ),

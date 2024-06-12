@@ -5,19 +5,20 @@ import 'package:helpu/src/features/core/screens/dashboard/widgets/add_practice_s
 import 'package:helpu/src/features/core/screens/dashboard/widgets/appbard.dart';
 import 'package:helpu/src/features/core/screens/dashboard/widgets/banner.dart';
 import 'package:helpu/src/features/core/screens/dashboard/widgets/category.dart';
-import 'package:helpu/src/features/core/screens/dashboard/widgets/latest_addition.dart';
+import 'package:helpu/src/features/core/screens/dashboard/widgets/latest_addition_empresa.dart';
 import 'package:helpu/src/features/core/screens/dashboard/widgets/search.dart';
+import 'package:helpu/src/features/core/screens/postulacion_screen.dart';
 import '../../models/dashboard/latest_model.dart';
 
 
-class Dashboard1 extends StatefulWidget {
-  const Dashboard1({Key? key}) : super(key: key);
+class DashboardEmpresa extends StatefulWidget {
+  const DashboardEmpresa({Key? key}) : super(key: key);
 
   @override
   _DashboardState createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard1> {
+class _DashboardState extends State<DashboardEmpresa> {
   String selectedCategory = 'IT'; // Categoría por defecto
   String searchQuery = ''; // Query de búsqueda
   List<DashboardLatestModel> filteredList = [];
@@ -67,6 +68,7 @@ class _DashboardState extends State<Dashboard1> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -81,7 +83,6 @@ class _DashboardState extends State<Dashboard1> {
             children: [
               /* -- Dashboard Header -- */
               Text(tDashboardTitle, style: textTheme.bodyMedium),
-              Text(tDashboardHeading, style: textTheme.headlineMedium),
 
               /* -- Dashboard Search -- */
               const SizedBox(height: tDashboardPadding),
@@ -101,13 +102,22 @@ class _DashboardState extends State<Dashboard1> {
               const SizedBox(height: tDashboardPadding),
               DashboardBanner(textTheme: textTheme),
 
+              /* -- Add Practice Button -- */
+              const SizedBox(height: tDashboardPadding),
+              ElevatedButton(
+                onPressed: () => _addPractice(context),
+                child: const Text('Añadir Práctica'),
+              ),
+
+
+
               /* -- Dashboard Latest Addition -- */
               const SizedBox(height: tDashboardPadding),
               Text(
                 'Prácticas añadidas',
                 style: textTheme.headlineSmall,
               ),
-              DashboardLatest(
+              DashboardLatestEmpresa(
                 textTheme: textTheme,
                 searchQuery: searchQuery, // Añadido para pasar la búsqueda
               ),
