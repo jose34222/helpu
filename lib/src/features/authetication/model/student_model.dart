@@ -30,6 +30,7 @@ class StudentModel {
       'full_name': fullName,
       'email': email,
       'phone_no': phoneNo,
+      'password': password,
       'carrera': carrera,
       'provincia': provincia,
       'genero': genero,
