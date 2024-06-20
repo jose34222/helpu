@@ -7,7 +7,7 @@ import 'package:helpu/src/features/postulacion/model/postulacion_model.dart';
 import 'package:helpu/src/features/practica/controller/practica_controller.dart';
 import 'package:helpu/src/features/practica/model/practica_model.dart';
 import 'package:helpu/src/features/student/controller/student_controller.dart';
-
+import 'package:string_similarity/string_similarity.dart';
 
 class PracticeDetailScreen extends StatelessWidget {
   final PracticaModel practice;
@@ -192,17 +192,17 @@ class PracticeDetailScreen extends StatelessWidget {
                               return DataTable(
                                 columns: const [
                                   DataColumn(label: Text('Nombre')),
-                                  DataColumn(label: Text('Email')),
+                                  DataColumn(label: Text('porcentaje')),
                                   DataColumn(label: Text('Revisado')),
                                   DataColumn(label: Text('Aprobado')),
                                   DataColumn(label: Text('Acciones')),
                                 ],
                                 rows: postulaciones.map((postulacion) {
                                   final student = students[postulacion.emailStudent];
-
+                                  double porcentaje = calcularPorcentajeIgualdad(practice.area, student?.carrera ?? '');
                                   return DataRow(cells: [
                                     DataCell(Text(student?.fullName ?? 'No encontrado', style: const TextStyle(color: Colors.black))),
-                                    DataCell(Text(postulacion.emailStudent, style: const TextStyle(color: Colors.black))),
+                                    DataCell(Text('${porcentaje.toStringAsFixed(2)}%', style: const TextStyle(color: Colors.black))),
                                     DataCell(Text(postulacion.isRevisado ? 'Si' : 'No', style: const TextStyle(color: Colors.black))),
                                     DataCell(Text(postulacion.aceptado ? 'Si' : 'No', style: const TextStyle(color: Colors.black))),
                                     DataCell(
@@ -244,6 +244,11 @@ class PracticeDetailScreen extends StatelessWidget {
       }
     }
     return students;
+  }
+
+  double calcularPorcentajeIgualdad(String str1, String str2) {
+    double similarity = StringSimilarity.compareTwoStrings(str1, str2);
+    return similarity * 100;
   }
 
   Widget _buildInfoItem(String label, String value, TextStyle style) {

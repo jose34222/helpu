@@ -4,6 +4,7 @@ class StudentModel {
   final String? id;
   final String fullName;
   final String email;
+  final String? photoUrl;
   final String phoneNo;
   final String password;
   final String carrera;
@@ -16,6 +17,7 @@ class StudentModel {
     this.id,
     required this.fullName,
     required this.email,
+    required this.photoUrl,
     required this.phoneNo,
     required this.password,
     required this.carrera,
@@ -29,6 +31,7 @@ class StudentModel {
     return {
       'full_name': fullName,
       'email': email,
+      'photo_url': photoUrl,
       'phone_no': phoneNo,
       'password': password,
       'carrera': carrera,
@@ -46,6 +49,7 @@ class StudentModel {
       id: document.id,
       fullName: data['full_name'],
       email: data['email'],
+      photoUrl: data['photo_url'],
       phoneNo: data['phone_no'],
       password: data['password'],
       carrera: data['carrera'],

@@ -9,6 +9,7 @@ import 'package:helpu/src/features/authetication/screens/signup/widgets/user_for
 import '../../model/empresa_model.dart';
 import '../../model/user_model.dart';
 
+
 class SignUpScreen extends StatefulWidget {
   final bool isCompany;
   const SignUpScreen({super.key, required this.isCompany});
@@ -18,24 +19,29 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-
+  @override
+  void initState() {
+    super.initState();
+    Get.lazyPut(() => SignUpController());
+  }
 
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(()=>SignUpController());
     return Scaffold(
       appBar: AppBar(
         title: const Text('Registro'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(tDefaultSize),
-        child: Column(
-          children: [
-            if (widget.isCompany)
-              CompanyRegistrationForm()
-            else
-              UserRegistrationForm(),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(tDefaultSize),
+          child: Column(
+            children: [
+              if (widget.isCompany)
+                CompanyRegistrationForm()
+              else
+                UserRegistrationForm(),
+            ],
+          ),
         ),
       ),
     );

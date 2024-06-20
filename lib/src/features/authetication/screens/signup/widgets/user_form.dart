@@ -1,7 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:helpu/src/features/authetication/controller/signup_controller.dart';
-import 'package:helpu/src/features/authetication/model/user_model.dart';
 
 class UserRegistrationForm extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
@@ -9,68 +10,67 @@ class UserRegistrationForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: formKey,
-      child: Column(
-        children: [
-          TextFormField(
-            controller: signUpController.nameController,
-            decoration: const InputDecoration(
-              labelText: 'Nombre completo',
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () {
+                signUpController.pickProfileImage();
+              },
+              child: Obx(() {
+                return CircleAvatar(
+                  radius: 50,
+                  backgroundImage: signUpController.profileImage.value != null
+                      ? FileImage(signUpController.profileImage.value!)
+                      : AssetImage('assets/images/default_profile.png') as ImageProvider,
+                );
+              }),
             ),
-          ),
-          TextFormField(
-            controller: signUpController.emailController,
-            decoration: const InputDecoration(
-              labelText: 'Correo electrónico',
+            SizedBox(height: 16),
+            TextField(
+              controller: signUpController.nameController,
+              decoration: InputDecoration(labelText: 'Full Name'),
             ),
-          ),
-          TextFormField(
-            controller: signUpController.phoneController,
-            decoration: const InputDecoration(
-              labelText: 'Número de teléfono',
+            TextField(
+              controller: signUpController.emailController,
+              decoration: InputDecoration(labelText: 'Email'),
             ),
-          ),
-          TextFormField(
-            controller: signUpController.passwordController,
-            decoration: const InputDecoration(
-              labelText: 'Contraseña',
+            TextField(
+              controller: signUpController.phoneController,
+              decoration: InputDecoration(labelText: 'Phone'),
             ),
-            obscureText: true,
-          ),
-          TextFormField(
-            controller: signUpController.carreraController,
-            decoration: const InputDecoration(
-              labelText: 'Carrera',
+            TextField(
+              controller: signUpController.passwordController,
+              decoration: InputDecoration(labelText: 'Password'),
+              obscureText: true,
             ),
-          ),
-          TextFormField(
-            controller: signUpController.provinciaController,
-            decoration: const InputDecoration(
-              labelText: 'Provincia',
+            TextField(
+              controller: signUpController.carreraController,
+              decoration: InputDecoration(labelText: 'Carrera'),
             ),
-          ),
-          TextFormField(
-            controller: signUpController.generoController,
-            decoration: const InputDecoration(
-              labelText: 'Género',
+            TextField(
+              controller: signUpController.provinciaController,
+              decoration: InputDecoration(labelText: 'Provincia'),
             ),
-          ),
-          TextFormField(
-            controller: signUpController.ciudadController,
-            decoration: const InputDecoration(
-              labelText: 'Ciudad',
+            TextField(
+              controller: signUpController.generoController,
+              decoration: InputDecoration(labelText: 'Género'),
             ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
+            TextField(
+              controller: signUpController.ciudadController,
+              decoration: InputDecoration(labelText: 'Ciudad'),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
                 signUpController.registerStudent();
-              }
-            },
-            child: const Text('Registrar'),
-          ),
-        ],
+              },
+              child: Text('Register'),
+            ),
+          ],
+        ),
       ),
     );
   }

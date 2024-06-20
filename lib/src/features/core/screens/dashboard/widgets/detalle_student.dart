@@ -1,10 +1,9 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:helpu/src/features/authetication/model/student_model.dart';
 import 'package:helpu/src/features/postulacion/controller/postulacion_controller.dart';
-import 'package:helpu/src/features/practica/controller/practica_controller.dart';
 import 'package:helpu/src/features/practica/model/practica_model.dart';
-
 
 class StudentDetailScreen extends StatelessWidget {
   final StudentModel student;
@@ -12,6 +11,16 @@ class StudentDetailScreen extends StatelessWidget {
 
   const StudentDetailScreen({Key? key, required this.student, required this.practica})
       : super(key: key);
+
+  Future<String?> getImageUrl(String path) async {
+    try {
+      final storageRef = FirebaseStorage.instance.ref().child(path);
+      return await storageRef.getDownloadURL();
+    } catch (e) {
+      print('Error getting download URL: $e');
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +30,7 @@ class StudentDetailScreen extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "DETALLE PRACTICA",
           style: TextStyle(
             color: Colors.white,
@@ -32,7 +41,7 @@ class StudentDetailScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -50,10 +59,10 @@ class StudentDetailScreen extends StatelessWidget {
           SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: 120),
+                const SizedBox(height: 120),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20.0),
-                  padding: EdgeInsets.all(20.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                  padding: const EdgeInsets.all(20.0),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20.0),
@@ -62,7 +71,7 @@ class StudentDetailScreen extends StatelessWidget {
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 2,
                         blurRadius: 5,
-                        offset: Offset(0, 3),
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
@@ -76,51 +85,70 @@ class StudentDetailScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 20),
-                      Divider(color: Colors.grey),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
+                      FutureBuilder<String?>(
+                        future: getImageUrl(student.photoUrl ?? 'assets/images/default_profile.png'),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError || !snapshot.hasData) {
+                            return const CircleAvatar(
+                              radius: 70,
+                              backgroundImage: AssetImage('assets/images/default_profile.png'),
+                            );
+                          } else {
+                            return CircleAvatar(
+                              radius: 70,
+                              backgroundImage: NetworkImage(snapshot.data!),
+                            );
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      const Divider(color: Colors.grey),
+                      const SizedBox(height: 20),
                       _buildInfoItem(
                         'Nombres:',
                         student.fullName,
                         textTheme.bodyMedium!,
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       _buildInfoItem(
                         'Email:',
                         student.email,
                         textTheme.bodyMedium!,
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       _buildInfoItem(
                         'Número de teléfono:',
                         student.phoneNo,
                         textTheme.bodyMedium!,
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       _buildInfoItem(
                         'Carrera:',
                         student.carrera,
                         textTheme.bodyMedium!,
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       _buildInfoItem(
                         'Provincia:',
                         student.provincia,
                         textTheme.bodyMedium!,
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       _buildInfoItem(
                         'Género:',
                         student.genero,
                         textTheme.bodyMedium!,
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       _buildInfoItem(
                         'Ciudad:',
                         student.ciudad,
                         textTheme.bodyMedium!,
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       Center(
                         child: Column(
                           children: [
@@ -130,7 +158,7 @@ class StudentDetailScreen extends StatelessWidget {
                                 controller.togglePostulacionAceptado(student.email, practica.id, true);
                               },
                               style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                   horizontal: 40,
                                   vertical: 15,
                                 ),
@@ -144,11 +172,11 @@ class StudentDetailScreen extends StatelessWidget {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.check,
                                     color: Colors.white,
                                   ),
-                                  SizedBox(width: 10),
+                                  const SizedBox(width: 10),
                                   Text(
                                     'Aceptado',
                                     style: textTheme.bodyMedium?.copyWith(
@@ -160,14 +188,14 @@ class StudentDetailScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             ElevatedButton(
                               onPressed: () {
-                                //logica para rechazar al estudainte
+                                // Lógica para rechazar al estudiante
                                 controller.togglePostulacionAceptado(student.email, practica.id, false);
                               },
                               style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                   horizontal: 40,
                                   vertical: 15,
                                 ),
@@ -181,11 +209,11 @@ class StudentDetailScreen extends StatelessWidget {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.close,
                                     color: Colors.white,
                                   ),
-                                  SizedBox(width: 10),
+                                  const SizedBox(width: 10),
                                   Text(
                                     'Rechazado',
                                     style: textTheme.bodyMedium?.copyWith(
@@ -200,7 +228,7 @@ class StudentDetailScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -218,13 +246,13 @@ class StudentDetailScreen extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
             color: Colors.black,
           ),
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Text(
           value,
           style: style.copyWith(

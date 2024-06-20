@@ -1,6 +1,7 @@
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:helpu/src/features/authetication/model/student_model.dart';
@@ -8,6 +9,8 @@ import 'package:helpu/src/repository/authentication_repository/authentication_re
 import 'package:helpu/src/repository/empresa_repository/empresa_repository.dart';
 import 'package:helpu/src/repository/student_repository/student_repository.dart';
 import 'package:helpu/src/features/authetication/model/empresa_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignUpController extends GetxController {
 
@@ -23,30 +26,62 @@ class SignUpController extends GetxController {
   final generoController = TextEditingController();
   final ciudadController = TextEditingController();
 
-  void registerStudent() {
+  var profileImage = Rx<File?>(null); // Hacer profileImage observable
+  Future<void> pickProfileImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      profileImage.value = File(pickedFile.path);
+    }
+  }
 
-    StudentModel studentModel = StudentModel(
+  Future<String?> uploadProfileImage(File? image) async {
+    if (image == null) return null;
+
+    try {
+      final storageRef = FirebaseStorage.instance.ref();
+      final profileImagesRef = storageRef.child('profile/${DateTime.now().millisecondsSinceEpoch}.jpg');
+
+      final uploadTask = profileImagesRef.putFile(image);
+      final snapshot = await uploadTask.whenComplete(() => {});
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+
+      return downloadUrl;
+    } catch (e) {
+      print('Error uploading profile image: $e');
+      return null;
+    }
+  }
+
+  void registerStudent() async {
+    try {
+      String? profileImageUrl;
+      if (profileImage.value != null) {
+        profileImageUrl = await uploadProfileImage(profileImage.value!);
+      }
+
+      StudentModel studentModel = StudentModel(
         fullName: nameController.text,
         email: emailController.text,
+        photoUrl: profileImageUrl,
         phoneNo: phoneController.text,
         password: passwordController.text,
         carrera: carreraController.text,
         provincia: provinciaController.text,
         genero: generoController.text,
         ciudad: ciudadController.text,
-        created_at: Timestamp.now()
-    );
+        created_at: Timestamp.now(),
+      );
 
-    StudentRepository.instance.createStudents(studentModel).then((_){
-
-      AuthenticationRepository.instance.createUserWithEmailAndPassword(studentModel.email, studentModel.password);
+      await StudentRepository.instance.createStudents(studentModel);
+      await AuthenticationRepository.instance.createUserWithEmailAndPassword(studentModel.email, studentModel.password);
       Get.back();
-    }).catchError((error) {
+    } catch (error) {
       Get.showSnackbar(GetSnackBar(
         message: error.toString(),
       ));
-    });
+    }
   }
+
 
   void registerEmpresa() {
 

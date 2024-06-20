@@ -7,7 +7,6 @@ import 'package:helpu/src/features/core/screens/dashboard/widgets/banner.dart';
 import 'package:helpu/src/features/core/screens/dashboard/widgets/category.dart';
 import 'package:helpu/src/features/core/screens/dashboard/widgets/latest_addition_empresa.dart';
 import 'package:helpu/src/features/core/screens/dashboard/widgets/search.dart';
-import 'package:helpu/src/features/core/screens/postulacion_screen.dart';
 import '../../models/dashboard/latest_model.dart';
 
 

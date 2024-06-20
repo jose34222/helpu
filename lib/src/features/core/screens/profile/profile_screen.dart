@@ -17,7 +17,6 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userController = Get.put(UserRepository());
     final controller = Get.put(ProfileController());
 
     var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
@@ -76,38 +75,6 @@ class ProfileScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
-                      Text(user.fullName, style: Theme.of(context).textTheme.headlineMedium),
-                      Text(user.email, style: Theme.of(context).textTheme.bodyMedium),
-                      const SizedBox(height: 20),
-
-                      SizedBox(
-                        width: 200,
-                        child: ElevatedButton(
-                          onPressed: () => Get.to(() => const UpdateProfileScreen()),
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: tPrimaryColor,
-                              side: BorderSide.none,
-                              shape: const StadiumBorder()),
-                          child: const Text(tEditProfile, style: TextStyle(color: tDarkColor)),
-                        ),
-                      ),
-                      const SizedBox(height: 30),
-                      const Divider(),
-                      const SizedBox(height: 10),
-
-                      ProfileMenuWidget(
-                          title: 'Configuraciones', icon: LineAwesomeIcons.cog, onPress: () {}),
-                      ProfileMenuWidget(
-                          title: 'Mis Postulaciones', icon: LineAwesomeIcons.wallet, onPress: () {}),
-                      ProfileMenuWidget(
-                          title: '',
-                          icon: LineAwesomeIcons.user_check,
-                          onPress: () {}),
-                      const Divider(),
-                      const SizedBox(height: 10),
-                      ProfileMenuWidget(
-                          title: 'Ayuda', icon: LineAwesomeIcons.info, onPress: () {}),
                       ProfileMenuWidget(
                           title: 'Cerra Sesión',
                           icon: LineAwesomeIcons.alternate_sign_out,
