@@ -11,6 +11,8 @@ import 'package:helpu/src/repository/student_repository/student_repository.dart'
 import 'package:helpu/src/features/authetication/model/empresa_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as img; // Importar la biblioteca image para manipulación de imágenes
+
 
 class SignUpController extends GetxController {
 
@@ -38,10 +40,19 @@ class SignUpController extends GetxController {
     if (image == null) return null;
 
     try {
-      final storageRef = FirebaseStorage.instance.ref();
-      final profileImagesRef = storageRef.child('profile/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      // Leer y redimensionar la imagen utilizando la biblioteca image
+      final originalImage = img.decodeImage(image.readAsBytesSync());
+      final resizedImage = img.copyResize(originalImage!, width: 200); // Redimensionar a 200px de ancho (ajustar según tus necesidades)
 
-      final uploadTask = profileImagesRef.putFile(image);
+      // Convertir la imagen redimensionada de nuevo a bytes
+      final resizedBytes = img.encodeJpg(resizedImage);
+
+      // Subir la imagen redimensionada a Firebase Storage
+      final storageRef = FirebaseStorage.instance.ref();
+      final profileImagesRef =
+      storageRef.child('profile/${DateTime.now().millisecondsSinceEpoch}.jpg');
+
+      final uploadTask = profileImagesRef.putData(resizedBytes); // Utilizar putData en lugar de putFile para subir datos de imagen
       final snapshot = await uploadTask.whenComplete(() => {});
       final downloadUrl = await snapshot.ref.getDownloadURL();
 

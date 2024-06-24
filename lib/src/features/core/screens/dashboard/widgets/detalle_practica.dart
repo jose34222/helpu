@@ -239,10 +239,11 @@ class PracticeDetailScreen extends StatelessWidget {
     final Map<String, StudentModel> students = {};
     for (final postulacion in postulaciones) {
       final student = await studentController.getStudentDetails(postulacion.emailStudent);
-      if (student != null) {
-        students[postulacion.emailStudent] = student;
-      }
+      students[postulacion.emailStudent] = student;
+      print("cantidad postulantes");
+      print(students.length);
     }
+
     return students;
   }
 

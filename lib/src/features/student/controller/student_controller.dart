@@ -13,8 +13,8 @@ class StudentController extends GetxController {
     await studentRepo.createStudents(student);
   }
 
-  Future<StudentModel> getStudentDetails(String id) async {
-    StudentModel  studentModel = await studentRepo.getStudentDetails(id);
+  Future<StudentModel> getStudentDetails(String email) async {
+    StudentModel  studentModel = await studentRepo.getStudentDetails(email);
     return studentModel;
   }
 

@@ -1,4 +1,3 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:helpu/src/features/authetication/model/student_model.dart';
@@ -11,16 +10,6 @@ class StudentDetailScreen extends StatelessWidget {
 
   const StudentDetailScreen({Key? key, required this.student, required this.practica})
       : super(key: key);
-
-  Future<String?> getImageUrl(String path) async {
-    try {
-      final storageRef = FirebaseStorage.instance.ref().child(path);
-      return await storageRef.getDownloadURL();
-    } catch (e) {
-      print('Error getting download URL: $e');
-      return null;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,23 +75,11 @@ class StudentDetailScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      FutureBuilder<String?>(
-                        future: getImageUrl(student.photoUrl ?? 'assets/images/default_profile.png'),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
-                          } else if (snapshot.hasError || !snapshot.hasData) {
-                            return const CircleAvatar(
-                              radius: 70,
-                              backgroundImage: AssetImage('assets/images/default_profile.png'),
-                            );
-                          } else {
-                            return CircleAvatar(
-                              radius: 70,
-                              backgroundImage: NetworkImage(snapshot.data!),
-                            );
-                          }
-                        },
+                      CircleAvatar(
+                        radius: 70,
+                        backgroundImage: student.photoUrl != null && student.photoUrl!.isNotEmpty
+                            ? NetworkImage(student.photoUrl!)
+                            : const AssetImage('assets/images/default_profile.png') as ImageProvider,
                       ),
                       const SizedBox(height: 20),
                       const Divider(color: Colors.grey),
