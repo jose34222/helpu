@@ -41,6 +41,7 @@ class PostulacionController extends GetxController {
 
   Future<void> createPostulacion(PostulacionModel postulacion) async {
     await postulacionRepo.createPostulacion(postulacion);
+    fetchPostulaciones();
   }
 
   Future<PostulacionModel> getPostulacionDetails(String id) async {

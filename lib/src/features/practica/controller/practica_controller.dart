@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:helpu/src/features/postulacion/controller/postulacion_controller.dart';
 import 'package:helpu/src/repository/practica_repository/practica_repository.dart';
 import 'package:helpu/src/features/practica/model/practica_model.dart';
 

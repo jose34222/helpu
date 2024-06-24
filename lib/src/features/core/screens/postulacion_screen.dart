@@ -4,19 +4,31 @@ import 'package:helpu/src/features/postulacion/controller/postulacion_controller
 import 'package:helpu/src/features/practica/controller/practica_controller.dart';
 import 'package:helpu/src/features/practica/model/practica_model.dart';
 
-class PostulacionesScreen extends StatelessWidget {
+class PostulacionesScreen extends StatefulWidget {
+  @override
+  _PostulacionesScreenState createState() => _PostulacionesScreenState();
+}
+
+class _PostulacionesScreenState extends State<PostulacionesScreen> {
+  final PostulacionController controller = Get.put(PostulacionController());
+  final PracticaController practicaController = Get.put(PracticaController());
+
+  @override
+  void dispose() {
+    // Eliminar el controlador cuando se salga de la pantalla
+    Get.delete<PostulacionController>();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final PostulacionController controller = Get.put(PostulacionController());
-    final PracticaController practicaController = Get.put(PracticaController());
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Postulaciones Realizadas',
-          style: TextStyle(color: Colors.white), // Cambia el color aquí
+          style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.blue, // Cambia el color de fondo del AppBar si es necesario
+        backgroundColor: Colors.blue,
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
