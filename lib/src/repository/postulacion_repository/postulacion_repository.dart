@@ -149,4 +149,22 @@ class PostulacionRepository extends GetxController {
       );
     }
   }
+
+  Future<bool> hasStudentApplied(String email, String idPractica) async {
+    try {
+      final querySnapshot = await _db
+          .collection('Postulaciones')
+          .where('email_student', isEqualTo: email)
+          .where('id_practica', isEqualTo: idPractica)
+          .get();
+
+      return querySnapshot.docs.isNotEmpty;
+    } catch (error) {
+      Get.snackbar('Error', error.toString(),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent.withOpacity(0.1),
+          colorText: Colors.red);
+      return false;
+    }
+  }
 }

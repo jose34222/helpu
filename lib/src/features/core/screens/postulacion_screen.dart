@@ -49,7 +49,7 @@ class PostulacionesScreen extends StatelessWidget {
                       title: Text('Error al cargar práctica'),
                       subtitle: Text(postulacion.createdAt.toDate().toString()),
                       trailing: Text(
-                        postulacion.aceptado ? 'Aceptado' : 'Pendiente',
+                        postulacion.isRevisado ? postulacion.aceptado ? 'Aceptado' : 'Rechazado' : 'Pendiente',
                         style: TextStyle(
                           color: postulacion.aceptado ? Colors.green : Colors.yellow,
                         ),
@@ -60,7 +60,7 @@ class PostulacionesScreen extends StatelessWidget {
                       title: Text('Práctica no encontrada'),
                       subtitle: Text(postulacion.createdAt.toDate().toString()),
                       trailing: Text(
-                        postulacion.aceptado ? 'Aceptado' : 'Pendiente',
+                        postulacion.isRevisado ? postulacion.aceptado ? 'Aceptado' : 'Rechazado' : 'Pendiente',
                         style: TextStyle(
                           color: postulacion.aceptado ? Colors.green : Colors.yellow,
                         ),
@@ -72,7 +72,7 @@ class PostulacionesScreen extends StatelessWidget {
                       title: Text('Práctica: ${practica.encabezado}'),
                       subtitle: Text(postulacion.createdAt.toDate().toString()),
                       trailing: Text(
-                        postulacion.aceptado ? 'Aceptado' : 'Pendiente',
+                        postulacion.isRevisado ? postulacion.aceptado ? 'Aceptado' : 'Rechazado' : 'Pendiente',
                         style: TextStyle(
                           color: postulacion.aceptado ? Colors.green : Colors.yellow,
                         ),

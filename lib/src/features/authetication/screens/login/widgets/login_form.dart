@@ -16,7 +16,6 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final loginController = Get.put(LoginController());
   final formKey = GlobalKey<FormState>();
-  String _selectedUserType = 'Usuario';
 
   @override
   Widget build(BuildContext context) {
@@ -27,21 +26,6 @@ class _LoginFormState extends State<LoginForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DropdownButton<String>(
-              value: _selectedUserType,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedUserType = newValue!;
-                });
-              },
-              items: <String>['Usuario', 'Empresa']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
             const SizedBox(height: tDefaultSize - 20),
             TextFormField(
               decoration: const InputDecoration(

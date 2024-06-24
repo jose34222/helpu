@@ -1,14 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:helpu/src/constants/colors.dart';
 import 'package:helpu/src/constants/image_strings.dart';
 import 'package:helpu/src/constants/sizes.dart';
-import 'package:helpu/src/features/core/screens/dashboard/widgets/detalle_practica.dart';
 import 'package:helpu/src/features/core/screens/dashboard/widgets/detalle_postulacion.dart';
 import 'package:helpu/src/features/practica/controller/practica_controller.dart';
 import 'package:helpu/src/features/practica/model/practica_model.dart';
 import 'package:get/get.dart';
-
 
 class DashboardLatestStudent extends StatelessWidget {
   const DashboardLatestStudent({
@@ -28,7 +25,7 @@ class DashboardLatestStudent extends StatelessWidget {
       future: controller.getPracticas(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
@@ -37,7 +34,6 @@ class DashboardLatestStudent extends StatelessWidget {
             height: 200,
             child: ListView.builder(
               itemCount: listPracticas.length,
-              shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) => GestureDetector(
                 onTap: () {
@@ -91,23 +87,25 @@ class DashboardLatestStudent extends StatelessWidget {
                                 child: const Icon(Icons.play_arrow),
                               ),
                               const SizedBox(width: tDashboardCardPadding),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    listPracticas[index].encabezado,
-                                    style: textTheme.headlineMedium,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    listPracticas[index].descripcion,
-                                    style: textTheme.headlineMedium?.copyWith(color: Colors.black),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              )
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      listPracticas[index].encabezado,
+                                      style: textTheme.headlineMedium,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Text(
+                                      listPracticas[index].descripcion,
+                                      style: textTheme.headlineMedium?.copyWith(color: Colors.black),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),

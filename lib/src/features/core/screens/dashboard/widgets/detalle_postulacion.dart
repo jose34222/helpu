@@ -6,7 +6,7 @@ import 'package:helpu/src/features/postulacion/controller/postulacion_controller
 import 'package:helpu/src/features/postulacion/model/postulacion_model.dart';
 import 'package:helpu/src/features/practica/controller/practica_controller.dart';
 import 'package:helpu/src/features/practica/model/practica_model.dart';
-
+import 'package:helpu/src/repository/postulacion_repository/postulacion_repository.dart'; // Importa el repositorio de postulaciones
 
 class PostulacionDetailScreen extends StatelessWidget {
   final PracticaModel practice;
@@ -122,57 +122,82 @@ class PostulacionDetailScreen extends StatelessWidget {
                         textTheme.bodyMedium!,
                       ),
                       SizedBox(height: 30),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            User? firebaseUser = await FirebaseAuth.instance.currentUser;
-                            if (firebaseUser != null) {
-                              PostulacionModel postulacionModel = PostulacionModel(
-                                  idPractica: practice.id.toString(),
-                                  emailStudent: firebaseUser.email.toString(),
-                                  emailEmpresa: practice.empresaEmail,
-                                  isRevisado: false,
-                                  aceptado: false,
-                                  createdAt: Timestamp.now()
-                              );
-                              controller.createPostulacion(postulacionModel);
-                            }
-                            else {
-                              throw Exception('No hay ningún usuario autenticado.');
-                            }
+                      FutureBuilder<bool>(
+                        future: PostulacionRepository.instance.hasStudentApplied(
+                          FirebaseAuth.instance.currentUser!.email!,
+                          practice.id.toString(),
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          }
 
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 40,
-                              vertical: 15,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            elevation: 5,
-                            shadowColor: Colors.blueAccent.shade200,
-                            backgroundColor: Colors.blueAccent.shade400,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.arrow_forward,
-                                color: Colors.white,
+                          if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          }
+
+                          final bool hasApplied = snapshot.data ?? false;
+
+                          if (hasApplied) {
+                            return Center(
+                              child: Text(
+                                'Ya has realizado una postulación a esta práctica.',
+                                style: TextStyle(color: Colors.red),
                               ),
-                              SizedBox(width: 10),
-                              Text(
-                                'Postularse',
-                                style: textTheme.bodyMedium?.copyWith(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                            );
+                          } else {
+                            return Center(
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  User? firebaseUser = FirebaseAuth.instance.currentUser;
+                                  if (firebaseUser != null) {
+                                    PostulacionModel postulacionModel = PostulacionModel(
+                                      idPractica: practice.id.toString(),
+                                      emailStudent: firebaseUser.email.toString(),
+                                      emailEmpresa: practice.empresaEmail,
+                                      isRevisado: false,
+                                      aceptado: false,
+                                      createdAt: Timestamp.now(),
+                                    );
+                                    controller.createPostulacion(postulacionModel);
+                                  } else {
+                                    throw Exception('No hay ningún usuario autenticado.');
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 40,
+                                    vertical: 15,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  elevation: 5,
+                                  shadowColor: Colors.blueAccent.shade200,
+                                  backgroundColor: Colors.blueAccent.shade400,
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.arrow_forward,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      'Postularse',
+                                      style: textTheme.bodyMedium?.copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
+                            );
+                          }
+                        },
                       ),
                       SizedBox(height: 20),
                     ],
