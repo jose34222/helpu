@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:helpu/src/features/postulacion/controller/postulacion_controller.dart';
 import 'package:helpu/src/repository/practica_repository/practica_repository.dart';
 import 'package:helpu/src/features/practica/model/practica_model.dart';
 
@@ -20,41 +19,61 @@ class PracticaController extends GetxController {
 
   final practicaRepo = Get.put(PracticaRepository());
 
+  var practicasList = <PracticaModel>[].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchPracticas();
+  }
+
   Future<void> createPractica(PracticaModel practica) async {
     await practicaRepo.createPractica(practica);
+    fetchPracticas(); // Actualiza la lista después de añadir una práctica
+  }
+
+
+  Future<void> fetchPracticas() async {
+    try {
+      User? user = await FirebaseAuth.instance.currentUser;
+      final List<PracticaModel> practicas = await practicaRepo.getPracticasByEmail(user?.email);
+      practicasList.assignAll(practicas);
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   Future<PracticaModel> getPracticaDetailByEmail(String id) async {
-    PracticaModel  practicaModel = await practicaRepo.getPracticaDetailsByEmail(id);
+    PracticaModel practicaModel = await practicaRepo.getPracticaDetailsByEmail(id);
     return practicaModel;
   }
 
   Future<void> togglePracticaEstado(String? id) async {
     await practicaRepo.togglePracticaEstado(id);
+    fetchPracticas(); // Actualiza la lista después de cambiar el estado de una práctica
   }
 
   Future<List<PracticaModel>> getPracticasbyEmail() async {
     final firebaseUser = await FirebaseAuth.instance.currentUser;
     if (firebaseUser != null) {
-        final practicas = await practicaRepo.getPracticasByEmail(firebaseUser.email);
-        return practicas;
-      }
-    else {
+      final practicas = await practicaRepo.getPracticasByEmail(firebaseUser.email!);
+      return practicas;
+    } else {
       throw Exception('No hay ningún usuario autenticado.');
     }
   }
 
-  Future<List<PracticaModel>> getPracticas() async {
+  Future<void> getPracticas() async {
     final List<PracticaModel> practicaModel = await practicaRepo.getPracticas();
-    return practicaModel;
-
+    practicasList.assignAll(practicaModel);
   }
 
-  List<PracticaModel> filterPracticas(List<PracticaModel> practicas, String query) {
+
+  List<PracticaModel> filterPracticas(String query) {
     if (query.isEmpty) {
-      return practicas;
+      return practicasList;
     }
-    return practicas.where((practica) {
+    return practicasList.where((practica) {
       final tituloLower = practica.titulo.toLowerCase();
       final encabezadoLower = practica.encabezado.toLowerCase();
       final descripcionLower = practica.descripcion.toLowerCase();
@@ -67,9 +86,7 @@ class PracticaController extends GetxController {
   }
 
   Future<PracticaModel> getPracticaDetailById(String idPractica) async {
-    PracticaModel  practicaModel = await practicaRepo.getPracticaDetailById(idPractica);
+    PracticaModel practicaModel = await practicaRepo.getPracticaDetailById(idPractica);
     return practicaModel;
   }
-
-
 }
